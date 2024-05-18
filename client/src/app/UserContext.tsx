@@ -6,7 +6,6 @@ import { IUser } from "./layout";
 const storedUserData =
   typeof window !== "undefined" ? window.localStorage.getItem("user") : null;
 const initialUserState = storedUserData ? JSON.parse(storedUserData) : {};
-
 export const userStore = create((set) => ({
   user: initialUserState,
   updateUser: (newUser: IUser | null) => {
@@ -27,10 +26,11 @@ interface IOrder {
 }
 
 interface CartState {
-  cart: IOrder[];
+  cart: IOrder[] | null;
   addToCart: (newOrder: IOrder) => void;
   SubFromCart: (productId: string) => void;
   removeFromCart: (productId: string) => void;
+  clearCart: () => void;
   getTotalPrice: () => number;
 }
 
@@ -38,34 +38,37 @@ export const cartStore = create<CartState>((set) => ({
   cart: [],
   addToCart: (newOrder: IOrder) =>
     set((state) => {
-      const existingOrderIndex = state.cart.findIndex(
+      const existingOrderIndex = state.cart?.findIndex(
         (order) => order.product._id === newOrder.product._id
       );
       if (existingOrderIndex !== -1) {
-        const updatedCart = state.cart.map((order, index) =>
+        const updatedCart = state.cart?.map((order, index) =>
           index === existingOrderIndex
             ? { ...order, quantity: order.quantity + newOrder.quantity }
             : order
         );
         return { cart: updatedCart };
       } else {
-        return { cart: [...state.cart, newOrder] };
+        return { cart: [...(state.cart ?? []), newOrder] };
       }
     }),
 
   SubFromCart: (productId: string) =>
     set((state) => {
-      const existingOrderIndex = state.cart.findIndex(
+      const existingOrderIndex = state.cart?.findIndex(
         (order) => order.product._id === productId
       );
       if (existingOrderIndex !== -1) {
-        const updatedCart = state.cart
-          .map((order, index) =>
-            index === existingOrderIndex
-              ? { ...order, quantity: order.quantity - 1 }
-              : order
-          )
-          .filter((order) => order.quantity > 0);
+        let updatedCart = null;
+        if (state.cart) {
+          const updatedCart = state.cart
+            .map((order, index) =>
+              index === existingOrderIndex
+                ? { ...order, quantity: order.quantity - 1 }
+                : order
+            )
+            .filter((order) => order.quantity > 0);
+        }
         return { cart: updatedCart };
       }
       return state;
@@ -73,11 +76,14 @@ export const cartStore = create<CartState>((set) => ({
 
   removeFromCart: (productId: string) =>
     set((state) => {
-      const updatedCart = state.cart.filter(
+      const updatedCart = state.cart?.filter(
         (order) => order.product._id !== productId
       );
       return { cart: updatedCart };
     }),
+
+  clearCart: () => set(() => ({ cart: null })),
+
   getTotalPrice: () => {
     const state: any = cartStore.getState();
     return state.cart.reduce(

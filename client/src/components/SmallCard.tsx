@@ -4,6 +4,7 @@ import { FaStar, FaHeart, FaBookmark } from "react-icons/fa";
 import Cookie from "cookie-universal";
 import Link from "next/link";
 import { cartStore } from "@/app/UserContext";
+
 export interface IProduct {
   _id: string;
   images: {
@@ -63,6 +64,11 @@ const SmallCard = ({ product, buttonText = "Buy" }: Props) => {
 
   function PlaySound(product: IProduct) {
     const audio = new Audio("/sound.mp3");
+    audio.play();
+  }
+
+  function PlaySoundCart() {
+    const audio = new Audio("/cart.wav");
     audio.play();
   }
   const LikeProduct = async (product: IProduct) => {
@@ -129,6 +135,7 @@ const SmallCard = ({ product, buttonText = "Buy" }: Props) => {
           <button
             onClick={() => {
               addToCart({ product, quantity: 1 }), console.log(cart);
+              PlaySoundCart();
             }}
             className="bg-primary text-white py-1 text-[1.1rem] font-semibold rounded-3xl  w-24  px-5 cursor-pointer"
           >
