@@ -20,90 +20,175 @@ const Landing = (props: Props) => {
   const filterProducts = (marca: string) => {
     setFilter(marca);
   };
-  const [MostPopulareProduct, setMostPopulareProduct] = useState<IProduct[]>([
+  const [MostPopulareProduct, setProducts] = useState<IProduct[]>([
     {
-      _id: "123",
+      _id: "1",
       name: "Tshirt Nike",
       price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
+      images: [
+        {
+          public_id:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+          url: "/images/product-5.png",
+        },
+      ],
+      category: "tshirt",
       sellerName: "Jeff",
       rating: 4,
       liked: true,
+      creatorId: "2",
+      colors: ["red", "blue"],
+      brand: "Zara",
+      reviews: [
+        {
+          _id: "123",
+          review: "Best rproduct ever",
+          name: "Rami Djebly",
+          rating: 4,
+          image:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+        },
+      ],
+      description:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos sed animi odit modi ipsum consectetur nihil eaque id quis est quia facilis quaerat voluptas praesentium suscipit, saepe tenetur ",
+      sizes: ["L", "M", "Xl", "XXL"],
+      quantity: 20,
     },
     {
-      _id: "1230",
+      _id: "2",
       name: "Tshirt Nike",
       price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
+      images: [
+        {
+          public_id:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+          url: "/images/product-5.png",
+        },
+      ],
+      category: "tshirt",
       sellerName: "Jeff",
       rating: 4,
       liked: true,
+
+      creatorId: "123",
+      colors: ["red", "blue"],
+      brand: "Zara",
+      reviews: [
+        {
+          _id: "123",
+          review: "Best rproduct ever",
+          name: "Rami Djebly",
+          rating: 4,
+          image:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+        },
+      ],
+      description:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos sed animi odit modi ipsum consectetur nihil eaque id quis est quia facilis quaerat voluptas praesentium suscipit, saepe tenetur ",
+      sizes: ["L", "M", "Xl", "XXL"],
+      quantity: 20,
     },
     {
-      _id: "13",
+      _id: "3",
       name: "Tshirt Nike",
       price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1235",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1232",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "12",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "",
-      },
+      images: [
+        {
+          public_id:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+          url: "/images/product-5.png",
+        },
+      ],
+      category: "tshirt",
       sellerName: "Jeff",
       rating: 4,
       liked: true,
+
+      creatorId: "123",
+      colors: ["red", "blue"],
+      brand: "Zara",
+      reviews: [
+        {
+          _id: "123",
+          review: "Best rproduct ever",
+          name: "Rami Djebly",
+          rating: 4,
+          image:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+        },
+      ],
+      description:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos sed animi odit modi ipsum consectetur nihil eaque id quis est quia facilis quaerat voluptas praesentium suscipit, saepe tenetur ",
+      sizes: ["L", "M", "Xl", "XXL"],
+      quantity: 20,
     },
     {
-      _id: "1234",
+      _id: "4",
       name: "Tshirt Nike",
       price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
+      images: [
+        {
+          public_id:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+          url: "/images/product-5.png",
+        },
+      ],
+      category: "tshirt",
       sellerName: "Jeff",
       rating: 4,
       liked: true,
+
+      creatorId: "123",
+      colors: ["red", "blue"],
+      brand: "Zara",
+      reviews: [
+        {
+          _id: "123",
+          review: "Best rproduct ever",
+          name: "Rami Djebly",
+          rating: 4,
+          image:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+        },
+      ],
+      description:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos sed animi odit modi ipsum consectetur nihil eaque id quis est quia facilis quaerat voluptas praesentium suscipit, saepe tenetur ",
+      sizes: ["L", "M", "Xl", "XXL"],
+      quantity: 20,
+    },
+    {
+      _id: "5",
+      name: "Tshirt Nike",
+      price: 20,
+      images: [
+        {
+          public_id:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+          url: "/images/product-5.png",
+        },
+      ],
+      category: "tshirt",
+      sellerName: "Jeff",
+      rating: 4,
+      liked: true,
+
+      creatorId: "123",
+      colors: ["red", "blue"],
+      brand: "Zara",
+      reviews: [
+        {
+          _id: "123",
+          review: "Best rproduct ever",
+          name: "Rami Djebly",
+          rating: 4,
+          image:
+            "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+        },
+      ],
+      description:
+        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos sed animi odit modi ipsum consectetur nihil eaque id quis est quia facilis quaerat voluptas praesentium suscipit, saepe tenetur ",
+      sizes: ["L", "M", "Xl", "XXL"],
+      quantity: 20,
     },
   ]);
   useEffect(() => {

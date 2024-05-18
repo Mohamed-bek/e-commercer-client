@@ -41,7 +41,14 @@ export default function Header({}: Props) {
           }}
           className="text-[1.2rem] cursor-pointer"
         />
-        <FiShoppingCart className="text-[1.2rem] cursor-pointer" />
+        <FiShoppingCart
+          onClick={() =>
+            document
+              .querySelector(".Cart")
+              ?.classList.replace("translate-x-full", "translate-x-0")
+          }
+          className="text-[1.2rem] cursor-pointer"
+        />
       </div>
     </header>
   );

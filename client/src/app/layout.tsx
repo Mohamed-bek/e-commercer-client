@@ -4,15 +4,17 @@ import Link from "next/link";
 import React, { useLayoutEffect, useState, useRef } from "react";
 import "./globals.css";
 import { RiMenu3Line } from "react-icons/ri";
+import Cart from "@/components/Cart";
 
 export interface IUser {
   _id: string;
   firstName: string;
   lastName: string;
-  birthday: string;
+  dateOfBirth: string;
+  email: string;
   gender: string;
-  address: string;
-  avatar: {
+  phoneNumber: number;
+  image?: {
     url: string;
     public_id: string;
   };
@@ -34,7 +36,7 @@ export default function RootLayout({
   ]);
   const navRef = useRef<HTMLElement>(null);
   const [linkActive, setlinkActive] = useState("/");
-  const [role, setrole] = useState("admin");
+  const [role, setrole] = useState("");
   useLayoutEffect(() => {
     if (!window.localStorage.getItem("mode")) {
       window.localStorage.setItem("mode", "white");
@@ -92,7 +94,12 @@ export default function RootLayout({
             </section>
           </div>
         ) : (
-          <div className="w-full h-full">{children}</div>
+          <div className="w-full h-full">
+            {children}
+            <div className="Cart fixed w-full h-[100vh] left-0 top-0 z-[99999999999] translate-x-full [transition:0.5s]">
+              <Cart />
+            </div>
+          </div>
         )}
       </body>
     </html>

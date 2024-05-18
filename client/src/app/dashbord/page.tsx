@@ -1,65 +1,72 @@
 "use client";
-import React, { FC, useState, useRef } from "react";
+import React, { FC, useState, useRef, useEffect } from "react";
 import { LuPencil } from "react-icons/lu";
 import { FaTelegramPlane } from "react-icons/fa";
 import ButtonIcon from "@/components/ButtonIcon";
 import { IUser } from "../layout";
+import axios from "axios";
+import Cookie from "cookie-universal";
 
-type Props = {
-  avatar: string;
-  firstName: string;
-  lastName: string;
-  birthday: string;
-  gender: string;
-  address: string;
-  _id: string;
-};
-
-const Profile: FC<Props> = () => {
-  // const user = JSON.stringify(
-  //   window.localStorage.getItem("user")
-  // ) as unknown as IUser;
-  const user: IUser = {
-    _id: "123",
-    firstName: "John",
-    lastName: "SIns",
-    birthday: "12/12/2002",
-    gender: "male",
-    address: "12 Yonyo",
-    avatar: {
-      url: "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      public_id: "1234",
-    },
-  };
+const Profile = () => {
+  const storedUserData = window.localStorage.getItem("user");
+  const initialUserState = storedUserData ? JSON.parse(storedUserData) : {};
+  const [user, setUser] = useState<IUser>(initialUserState);
+  const [avatar, setAvatar] = useState<any>();
   const inputImg = useRef<HTMLInputElement>(null);
   const [firstName, setFirstName] = useState<String>(user.firstName);
   const [lastName, setLastName] = useState<String>(user.lastName);
-  const [birthday, setBirthday] = useState<String>(user.birthday);
+  const [dateOfBirth, setDateOfBirth] = useState<String>(user.dateOfBirth);
   const [gender, setGender] = useState<String>(user.gender);
-  const [address, setAddress] = useState<String>(user.address);
+  const [phoneNumber, setPhoneNumber] = useState<Number>(user.phoneNumber);
+  const cookie = Cookie();
+
   const handleProfilePictureChange = async (e: any) => {
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("profilePicture", file);
-    formData.append("id", user._id);
-    const options = {
-      method: "POST",
-      body: formData,
-    };
-    const res = await fetch("/upload-profilepicture", options);
-    if (res.ok) {
-      console.log("successfully uploaded profile picture");
-      window.location.assign("");
-    }
-    if (!res.ok) {
-      console.log("failed to upload profile picture");
+    const file = e.target.files?.[0];
+    if (file) {
+      console.log("the file is exist");
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        if (reader.readyState == 2) {
+          const { data } = await axios.put(
+            `http://localhost:8000/userImage/${user._id}`,
+            { image: reader.result }
+          );
+          console.log(data);
+          localStorage.setItem("user", JSON.stringify(data.user));
+          window.location.href = "/dashbord";
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
+
+  const UpdateUser = async () => {
+    const { data } = await axios.put(
+      `http://localhost:8000/user/informations`,
+      {
+        firstName,
+        lastName,
+        gender,
+        dateOfBirth,
+        phoneNumber,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + cookie.get("token"),
+        },
+      }
+    );
+
+    localStorage.setItem("user", JSON.stringify(data.user));
+    window.location.href = "/dashbord";
+  };
+
+  useEffect(() => {}, [user]);
   return (
     <div className="h-full w-full">
       <p className="ml-6 mt-3 relative w-20 h-20 rounded-3xl">
         <img
-          src={user.avatar.url}
+          src={user.image?.url}
           alt="user avatar"
           className="w-full h-full rounded-3xl"
         />
@@ -122,6 +129,7 @@ const Profile: FC<Props> = () => {
             <input
               type="text"
               className=" bg-transparent w-fit focus:outline-none font-light text-[#696868]"
+              placeholder="Last Name"
               onChange={(e) => setLastName(e.target.value)}
               value={lastName as string}
             />
@@ -146,9 +154,10 @@ const Profile: FC<Props> = () => {
             />{" "}
             <input
               type="text"
+              placeholder="Unkown"
               className=" bg-transparent w-fit focus:outline-none font-light text-[#696868]"
-              onChange={(e) => setBirthday(e.target.value)}
-              value={birthday as string}
+              onChange={(e) => setDateOfBirth(e.target.value)}
+              value={dateOfBirth as string}
             />
           </p>
         </div>
@@ -177,7 +186,7 @@ const Profile: FC<Props> = () => {
         <div>
           <p className="text-[1.1rem] font-medium tracking-[0.8px] ">
             {" "}
-            Address{" "}
+            Phone Number{" "}
           </p>
           <p className="flex items-center gap-1 pl-3 border border-black border-solid rounded-lg py-1 px-2">
             {" "}
@@ -192,8 +201,9 @@ const Profile: FC<Props> = () => {
             <input
               type="text"
               className=" bg-transparent w-fit focus:outline-none font-light text-[#696868]"
-              onChange={(e) => setAddress(e.target.value)}
-              value={address as string}
+              placeholder="Unknown"
+              onChange={(e) => setPhoneNumber(e.target.value as any)}
+              value={phoneNumber as number}
             />
           </p>
         </div>
@@ -203,7 +213,11 @@ const Profile: FC<Props> = () => {
           <FaTelegramPlane className="bg-black z-20 text-white border-[1px] border-solid [transition:0.3s] border-black absolute top-1/2 left-[-4px] translate-y-[-50%] h-[56px] w-[56px]  p-3 rounded-full" />
           <p className="relative z-20">Update</p>{" "}
         </button>{" "} */}
-        <ButtonIcon icon={FaTelegramPlane} content="update" />
+        <ButtonIcon
+          icon={FaTelegramPlane}
+          onClick={() => UpdateUser()}
+          content="update"
+        />
       </div>
     </div>
   );

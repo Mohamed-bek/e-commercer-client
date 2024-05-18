@@ -7,10 +7,11 @@ import { BiPurchaseTag } from "react-icons/bi";
 import { GrSecure } from "react-icons/gr";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { IoStorefrontOutline } from "react-icons/io5";
-
-import { IPurchase } from "@/components/Purchases";
 import Refund from "@/components/Refund";
 import Link from "next/link";
+import { IUser } from "../layout";
+import { IPurchase } from "../purchases/page";
+import { userStore } from "../UserContext";
 
 function page({
   children,
@@ -19,90 +20,7 @@ function page({
 }>) {
   const [refund, setRefund] = useState<IPurchase>();
   const [displayRefund, setDisplayRefund] = useState(false);
-  const [products, setProducts] = useState([
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 1",
-      sellerName: "seller 1",
-      _id: "id 1",
-      price: 205,
-      rating: 5,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 2",
-      sellerName: "seller 2",
-      _id: "id 2",
-      price: 100,
-      rating: 3,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 3",
-      sellerName: "seller 3",
-      _id: "id 3",
-      price: 399,
-      rating: 4,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 3",
-      sellerName: "seller 3",
-      _id: "id 3",
-      price: 399,
-      rating: 4,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 3",
-      sellerName: "seller 3",
-      _id: "id 3",
-      price: 399,
-      rating: 4,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 3",
-      sellerName: "seller 3",
-      _id: "id 3",
-      price: 399,
-      rating: 4,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 3",
-      sellerName: "seller 3",
-      _id: "id 3",
-      price: 399,
-      rating: 4,
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 3",
-      sellerName: "seller 3",
-      _id: "id 3",
-      price: 399,
-      rating: 4,
-    },
-  ]);
-  const [user, setUser] = useState({
-    firstName: "Mohamed",
-    lastName: "Bekkouche",
-    birthday: "12/20/2023",
-    gender: "male",
-    address: "constantine",
-    _id: "123dsqd3",
-    avatar:
-      "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-  });
+  const user = userStore((state: any) => state.user);
   const ul = useRef<HTMLUListElement>(null);
   const slideDiv = useRef<HTMLDivElement>(null);
   const toggleLigne = (target: any) => {
@@ -127,7 +45,7 @@ function page({
             displayRefund ? "flex" : "hidden"
           }`}
         >
-          <Refund refund={refund as IPurchase} />
+          <Refund refund={refund as any} />
         </div>
         <ul
           ref={ul}
@@ -139,32 +57,32 @@ function page({
           >
             {" "}
           </div>
-          <li
-            className="cartButton hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <Link href="/dashbord">
+          <Link className="w-[90%]" href="/dashbord">
+            <li
+              className="cartButton hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
               <FaRegUser className="absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%] z-20 " />
               profile
-            </Link>
-          </li>
-          <li
-            className="cartButton hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <Link href="/dashbord/favorites">
+            </li>
+          </Link>
+          <Link className="w-[90%]" href="/dashbord/favorites">
+            <li
+              className="cartButton hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
               <MdFavoriteBorder className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
               favorites
-            </Link>
-          </li>
+            </li>
+          </Link>
           {/* <li
           className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-[black] after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
           onClick={(e) =>
@@ -176,75 +94,77 @@ function page({
           <LiaHandHoldingHeartSolid className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
           wishlist
         </li> */}
-          <li
-            className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <Link href="/dashbord/purchases">
+          <Link className="w-[90%]" href="/dashbord/purchases">
+            <li
+              className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
               <BiPurchaseTag className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
               purchases
-            </Link>
-          </li>
-          <li
-            className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <Link href="/dashbord/security">
+            </li>
+          </Link>
+          <Link className="w-[90%]" href="/dashbord/security">
+            <li
+              className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
               <GrSecure className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
               security
-            </Link>
-          </li>
-          <li
-            className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <Link href="/dashbord/saved">
+            </li>
+          </Link>
+          <Link className="w-[90%]" href="/dashbord/saved">
+            <li
+              className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
               <FaRegBookmark className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
               saved
-            </Link>
-          </li>
-          <li
-            className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <Link href="/dashbord/notifications">
+            </li>
+          </Link>
+          <Link className="w-[90%]" href="/dashbord/notifications">
+            <li
+              className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
               <IoIosNotificationsOutline className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
               notifications
-            </Link>
-          </li>
-          <li
-            className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
-            onClick={(e) =>
-              (e.target as any).tagName === "LI"
-                ? toggleLigne(e.target)
-                : toggleLigne((e.target as any).parentNode)
-            }
-          >
-            <IoStorefrontOutline className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
-            be a seller
-          </li>
+            </li>
+          </Link>
+          <Link className="w-[90%]" href="/dashbord/beseller">
+            <li
+              className="cartButton  hover:text-white z-20 after:-z-10 after:content-[''] after:h-full after:w-[0] after:absolute after:left-[10px] after:top-2/4 after:-translate-y-1/2 after:bg-black after:[transition:0.3s] [transition:0.3s] after:rounded-2xl  mx-auto  px-3 relative gap-3 py-3 text-[1.2rem] capitalize cursor-pointer text-center bg-white text-black w-4/6 rounded-2xl h-[50px]"
+              onClick={(e) =>
+                (e.target as any).tagName === "LI"
+                  ? toggleLigne(e.target)
+                  : toggleLigne((e.target as any).parentNode)
+              }
+            >
+              <IoStorefrontOutline className=" absolute left-[-10px] top-1/2 w-[54px] h-[54px] p-4 border-solid border-[1px] bg-black text-white border-black rounded-full translate-y-[-50%]" />
+              be a seller
+            </li>
+          </Link>
         </ul>
         <div className="h-full w-[75%] flex flex-col gap-5 ">
           <header className="px-2 rounded-lg h-[12.5%] flex gap-3 items-center bg-white ">
             <img
               className="w-[50px] h-[50px] rounded-full "
-              src={user.avatar}
+              src={user.image?.url}
               alt="user avatar"
             />
             <p> {user.firstName + " " + user.lastName} </p>

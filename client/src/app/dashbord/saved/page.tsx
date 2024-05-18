@@ -1,7 +1,9 @@
 "use client";
 import SmallCard, { IProduct } from "@/components/SmallCard";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaSearch, FaStar, FaBookmark } from "react-icons/fa";
+import axios from "axios";
+import Cookie from "cookie-universal";
 
 type Props = {
   products: {
@@ -15,92 +17,7 @@ type Props = {
 };
 
 function Favorites() {
-  const [products, setProducts] = useState<IProduct[]>([
-    {
-      _id: "123",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1230",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "13",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1235",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1232",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "12",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1234",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-  ]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const removeFavorite = async (productId: number) => {
     const result = await fetch(`https://api.`, {
       method: "DELETE",
@@ -109,7 +26,18 @@ function Favorites() {
       products.splice(productId, 1);
     }
   };
-
+  const GetWishProducts = async () => {
+    const cookie = Cookie();
+    const { data } = await axios.get(`http://localhost:8000/likedProducts`, {
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+      },
+    });
+    setProducts(data.products);
+  };
+  useEffect(() => {
+    GetWishProducts();
+  }, []);
   return (
     <div className=" py-3 px-5 h-full">
       <div className="flex justify-between items-center py-2 pb-3 px-3">
@@ -126,8 +54,8 @@ function Favorites() {
         </div>
       </div>
       <div className="favorite grid bg-primary grid-cols-[repeat(auto-fit,_minmax(180px,_1fr))] w-full gap-3 h-[50vh] p-3 overflow-y-auto ">
-        {products.map((product, i) => (
-          <SmallCard product={product} />
+        {products.map((product) => (
+          <SmallCard key={product._id} product={product} />
         ))}
       </div>
     </div>

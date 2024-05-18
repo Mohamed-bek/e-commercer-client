@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { GoDotFill } from "react-icons/go";
 import { TbShoppingCartPlus } from "react-icons/tb";
 import {
@@ -10,47 +10,56 @@ import {
   FaAngleUp,
 } from "react-icons/fa6";
 import { FaHeart, FaRegBookmark, FaRegHeart, FaStar } from "react-icons/fa";
+import { IProduct } from "./SmallCard";
 
-type Props = {};
+type Props = {
+  product: IProduct;
+};
+const ProductInitialValue = {
+  _id: "123",
+  name: "Tshirt Nike",
+  price: 20,
+  images: [
+    {
+      public_id:
+        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+      url: "/images/product-5.png",
+    },
+  ],
+  category: "tshirt",
+  sellerName: "Jeff",
+  rating: 4,
+  liked: true,
 
-export default function Card({}: Props) {
-  const [rotate, setrotate] = useState(30);
+  creatorId: "123",
+  colors: ["red", "blue"],
+  brand: "Zara",
+  reviews: [
+    {
+      _id: "123",
+      review: "Best rproduct ever",
+      name: "Rami Djebly",
+      rating: 4,
+      image:
+        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
+    },
+  ],
+  description:
+    "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dignissimos sed animi odit modi ipsum consectetur nihil eaque id quis est quia facilis quaerat voluptas praesentium suscipit, saepe tenetur ",
+  sizes: ["L", "M", "Xl", "XXL"],
+  quantity: 20,
+};
+export default function Card({ product = ProductInitialValue }: Props) {
+  // const [rotate, setrotate] = useState(30);
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [colors, setColors] = useState(["red", "blue", "green", "yellow"]);
-  const [sizes, setSizes] = useState([38, 39, 40, 41, 42, 43, 44]);
+  // const [colors, setColors] = useState(["red", "blue", "green", "yellow"]);
+  // const [sizes, setSizes] = useState([38, 39, 40, 41, 42, 43, 44]);
   const [activeFaq, setActiveFaq] = useState(null);
   const [productImg, setProductImg] = useState(0);
-  const [reviews, setReviews] = useState([
-    {
-      name: "Mohamed Bekkouche",
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      content: "Review from mohamed bekkouche",
-      rating: 4,
-    },
-    {
-      name: "Mohamed Bekkouche",
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      content: "Review from mohamed bekkouche",
-      rating: 4,
-    },
-    {
-      name: "Mohamed Bekkouche",
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      content: "Review from mohamed bekkouche",
-      rating: 4,
-    },
-    {
-      name: "Mohamed Bekkouche",
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      content: "Review from mohamed bekkouche",
-      rating: 4,
-    },
-  ]);
+  useEffect(() => {
+    console.log("the all props is : ", product);
+  });
   const [faqs, setFaqs] = useState([
     {
       question: "Question 1",
@@ -71,34 +80,13 @@ export default function Card({}: Props) {
     },
   ]);
   const stars = [0, 1, 2, 3, 4];
-  const [rating, setRating] = useState(3);
   const [nbrRating, setNbrRating] = useState(78);
-  const [seller, setSeller] = useState({
-    img: null,
-    firstName: "undefined",
-    lastName: "undefined",
-  });
   const [slider, setSlider] = useState(1);
 
   const sliderLigne = useRef<HTMLDivElement>(null);
   const colorRef = useRef<HTMLDivElement>(null);
   const sizesRef = useRef<HTMLDivElement>(null);
   const productImgRef = useRef<HTMLImageElement>(null);
-
-  const images = [
-    {
-      url: "/images/pngwing.com.png",
-    },
-    {
-      url: "/images/success.png",
-    },
-    {
-      url: "/images/pngwing.com.png",
-    },
-    {
-      url: "/images/pngwing.com.png",
-    },
-  ];
 
   const moveSlider = (nbSlider: number) => {
     setSlider(nbSlider);
@@ -148,7 +136,7 @@ export default function Card({}: Props) {
     else setActiveFaq(index);
   };
 
-  const changeSize = (color: number, element: EventTarget) => {
+  const changeSize = (size: string | number, element: EventTarget) => {
     const sizes = sizesRef.current?.childNodes;
     sizes?.forEach((el) => {
       if (el != element) {
@@ -175,7 +163,7 @@ export default function Card({}: Props) {
             <img
               ref={productImgRef}
               className="w-[80%] mx-auto [transition:0.3s]"
-              src={images[productImg].url}
+              src={product.images[productImg]?.url}
               alt="new"
             />
           </div>
@@ -226,9 +214,9 @@ export default function Card({}: Props) {
                   <FaStar
                     key={star}
                     className={`[transition:0.3s] cursor-pointer ${
-                      rating > star ? "text-orange-300" : ""
+                      product.rating > star ? "text-orange-300" : ""
                     }`}
-                    onClick={() => setRating(star + 1)}
+                    // onClick={() => setRating(star + 1)}
                   />
                 ))}
                 ({nbrRating})
@@ -242,7 +230,7 @@ export default function Card({}: Props) {
                   alt="sellerPhoto"
                 />
               </div>
-              <p> {(seller.firstName, " ", seller.lastName)} </p>
+              <p> {product.sellerName} </p>
             </div>
           </div>
           <header className="w-full relative flex p-2 items-center mb-2">
@@ -296,7 +284,7 @@ export default function Card({}: Props) {
                 </div>
                 <span> Color </span>
                 <div ref={colorRef} className="flex gap-2 items-center px-4">
-                  {colors.map((color, index) => (
+                  {product.colors.map((color, index) => (
                     <div
                       key={color}
                       className={`w-6 h-6 [transition:0.3s] cursor-pointer rounded-full my-2`}
@@ -310,7 +298,7 @@ export default function Card({}: Props) {
                   ref={sizesRef}
                   className="flex gap-2 items-center py-3 px-4"
                 >
-                  {sizes.map((size, index) => (
+                  {product.sizes.map((size, index) => (
                     <div
                       key={size}
                       className={`border-[1px] border-[solid] border-[black] font-extralight text-[#706e6e] rounded-[12px] p-[5px] w-[40px] h-[40px] flex justify-center items-center [transition:0.3s] cursor-pointer`}
@@ -368,17 +356,17 @@ export default function Card({}: Props) {
                 slider === 3 ? "" : "translate-x-[-100%]"
               }`}
             >
-              {reviews.map((review, i) => (
+              {product.reviews.map((review, i) => (
                 <div
                   key={i}
                   className={`bg-primary py-2 px-2 rounded-[8px] ${
-                    i !== reviews.length - 1 ? "mb-2" : ""
+                    i !== product.reviews.length - 1 ? "mb-2" : ""
                   }`}
                 >
                   <div className="flex items-center gap-4">
                     <img
                       className="w-10 h-10 rounded-full"
-                      src={review.avatar}
+                      src={review.image}
                       alt=""
                     />
                     <div>
@@ -398,7 +386,7 @@ export default function Card({}: Props) {
                   </div>
                   <p className=" mt-2 pl-1 font-light text-[0.9rem]">
                     {" "}
-                    {review.content}{" "}
+                    {review.review}{" "}
                   </p>
                 </div>
               ))}
@@ -416,19 +404,22 @@ export default function Card({}: Props) {
                 onClick={() =>
                   productImg > 1
                     ? toggleImgProduct(productImg + 1)
-                    : toggleImgProduct(images.length - 1)
+                    : toggleImgProduct(product.images.length - 1)
                 }
               />
-              {images.map((image, i) => (
+              {product.images.map((image, i) => (
                 <div
                   key={i}
                   className={`p-3 bg-primary rounded-[8px] cursor-pointer w-[${
-                    100 / images.length
+                    100 / product.images.length
                   }%]`}
                 >
                   <img
-                    onClick={() => toggleImgProduct(i)}
-                    src={image.url}
+                    onClick={() => {
+                      toggleImgProduct(i);
+                      console.log(image);
+                    }}
+                    src={image as any}
                     alt="product image"
                     className="w-[90%]"
                   />
@@ -437,7 +428,7 @@ export default function Card({}: Props) {
               <FaChevronRight
                 className="cursor-pointer text-xl"
                 onClick={() =>
-                  productImg < images.length - 1
+                  productImg < product.images.length - 1
                     ? toggleImgProduct(productImg + 1)
                     : toggleImgProduct(0)
                 }

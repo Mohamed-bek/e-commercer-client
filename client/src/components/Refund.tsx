@@ -1,11 +1,34 @@
 import React, { useState } from "react";
-import { IPurchase } from "./Purchases";
 import { FiSend } from "react-icons/fi";
 
-type Props = { refund: IPurchase | null };
 import { HiOutlineReceiptRefund } from "react-icons/hi2";
 import ButtonIcon from "./ButtonIcon";
 import { IoMdClose } from "react-icons/io";
+import { IPurchase } from "@/app/dashbord/purchases/page";
+
+export interface IRefund {
+  store: {
+    firstName: string;
+    lastName: string;
+    image: {
+      url: string;
+      public_id: string;
+    };
+  };
+  product: {
+    name: string;
+    _id: string;
+    images: {
+      url: string;
+      public_id: string;
+    }[];
+    price: number;
+    quantity: Number;
+  };
+  createdAt: Date;
+}
+
+type Props = { refund: IRefund | null };
 
 function Refund({ refund }: Props) {
   const [refundCause, setRefundCause] = useState<String[]>();
@@ -41,17 +64,23 @@ function Refund({ refund }: Props) {
           <div className="flex gap-2 items-center w-[30%]">
             <img
               className="w-14 rounded-md"
-              src={refund.img}
+              src={refund.product.images[0]?.url}
               alt="product img"
             />
-            <p> {refund.name && refund.name} </p>
+            <p> {refund.product.name} </p>
           </div>
-          <div className="w-[30%] font-[200]"> {refund.sellerName} </div>
-          <div className="w-[10%] font-[600]"> {refund.price}$ </div>
-          <div className="w-[10%] font-[600]"> {refund.piece} </div>
+          <div className="w-[30%] font-[200]">
+            {" "}
+            {refund.store.firstName + " " + refund.store.lastName}{" "}
+          </div>
+          <div className="w-[10%] font-[600]"> {refund.product.price}$ </div>
+          <div className="w-[10%] font-[600]">
+            {" "}
+            {refund.product.quantity.toString()}{" "}
+          </div>
           <div className="w-[15%] font-[200]">
             {" "}
-            {refund.date.toLocaleDateString("en-US", {
+            {refund.createdAt.toLocaleDateString("en-US", {
               month: "short",
               day: "2-digit",
               year: "numeric",
