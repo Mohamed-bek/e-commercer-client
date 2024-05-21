@@ -1,144 +1,85 @@
 "use client";
+import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Cookie from "cookie-universal";
 type Props = {};
 interface INotification {
-  avatar: string;
-  date: Date;
+  createdAt: Date;
   content: string;
   _id: string;
-  name: string;
+  destination: string;
 }
 
 function Notification({}: Props) {
   const [notifications, setNotifications] = useState<INotification[]>([
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2024, 3, 3),
-      content: "lorem ipsum dolor sit amet",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
       _id: "id1",
-      name: "Nabile",
+      destination: "id2",
     },
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id2",
-      name: "Mohamed",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
+      _id: "id1",
+      destination: "id2",
     },
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id3",
-      name: "Zaki",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
+      _id: "id1",
+      destination: "id2",
     },
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
+      _id: "id1",
+      destination: "id2",
     },
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
+      _id: "id1",
+      destination: "id2",
     },
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
+      _id: "id1",
+      destination: "id2",
     },
     {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
-    },
-    {
-      avatar:
-        "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      date: new Date(2011, 3, 3),
-      content: "lorem ipsum dolor sit amet",
-      _id: "id4",
-      name: "Ayoube",
+      createdAt: new Date(2024, 3, 3),
+      content: "You Buy a new Product from Steve Smith",
+      _id: "id1",
+      destination: "id2",
     },
   ]);
 
+  const GetNotifications = async () => {
+    const cookie = Cookie();
+    const { data } = await axios.get(`http://localhost:8000/notification/all`, {
+      headers: {
+        Authorization: `Bearer ${cookie.get("token")}`,
+      },
+    });
+    setNotifications(data.notifications);
+  };
+  useEffect(() => {
+    // GetNotifications();
+  }, []);
+
   return (
     <div className="w-full h-full px-2 overflow-y-auto">
-      {notifications.map((notification) => (
+      {notifications.map((notification, i) => (
         <div
-          className="w-full flex p-2 items-center justify-between bg-white my-2 border-b border-solid border-black"
           key={notification._id}
+          className="w-full flex p-2 items-center justify-between bg-white my-2 border-b border-solid border-black"
         >
-          <div className="flex items-center">
-            <img
-              className="w-14 h-14 rounded-full mr-3"
-              src={notification.avatar}
-              alt="notification img"
-            />
-            <p className="font-[600] pr-1 text-[1.1rem] cursor-pointer">
-              {" "}
-              {notification.name}{" "}
-            </p>
-            <p className="text-[0.95rem]">{notification.content}</p>
-          </div>
+          <p className="text-[0.95rem]">{notification.content}</p>
           <div className="font-[100] ">
-            {formatDistanceToNow(new Date(notification.date), {
+            {formatDistanceToNow(new Date(notification.createdAt), {
               addSuffix: false,
             })}{" "}
             ago

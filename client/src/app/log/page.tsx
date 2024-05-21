@@ -10,15 +10,47 @@ import { FaFacebook } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import Button from "@/components/Button";
 import { userStore } from "../UserContext";
+import axios from "axios";
+import Cookie from "cookie-universal";
+
+export const ErrorHandler = (
+  Err: RefObject<HTMLDivElement | HTMLInputElement>,
+  st: string
+) => {
+  if (Err.current?.tagName.toLowerCase() === "input") {
+    const intValue: string = (Err.current as HTMLInputElement).value;
+    (Err.current as HTMLInputElement).value = st;
+    setTimeout(() => {
+      (Err.current as HTMLInputElement).value = intValue;
+    }, 1000);
+  }
+  if (Err.current?.tagName.toLowerCase() === "div") {
+    const input = Err.current?.querySelector("input");
+    if (input) {
+      const intValue: string = input.value;
+      input.value = st;
+      setTimeout(() => {
+        input.value = intValue;
+      }, 1000);
+    }
+  }
+  Err.current?.classList.add("error");
+  setTimeout(() => {
+    Err.current?.classList.remove("error");
+  }, 1000);
+};
 
 const page = () => {
   const user = userStore((state: any) => state.user);
+  const cookies = Cookie();
+
   useEffect(() => {
     console.log("user is the : ", user);
     console.log("user is the : ", user);
     console.log("user is the : ", user);
     console.log("user is the : ", user);
   }, []);
+
   const signup = useRef<HTMLDivElement>(null);
   const signin = useRef<HTMLDivElement>(null);
   const slider = useRef<HTMLDivElement>(null);
@@ -30,92 +62,113 @@ const page = () => {
   const passwordInRef = useRef<HTMLDivElement>(null);
   const passwordUpRef = useRef<HTMLDivElement>(null);
   const conPasswordRef = useRef<HTMLDivElement>(null);
-  const userNameRef = useRef<HTMLInputElement>(null);
+  const firstNameRef = useRef<HTMLInputElement>(null);
+  const lastNameRef = useRef<HTMLInputElement>(null);
   const box1 = useRef<HTMLDivElement>(null);
   const box2 = useRef<HTMLDivElement>(null);
   const box3 = useRef<HTMLDivElement>(null);
   const SuccessImg = useRef<HTMLDivElement>(null);
 
   const [see, setSee] = useState(false);
-  const [userName, setUserName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [emailIn, setEmailIn] = useState("");
   const [emailUp, setEmailUp] = useState("");
   const [passwordIn, setPasswordIn] = useState("");
   const [passwordUp, setPasswordUp] = useState("");
   const [conPassword, setConPassword] = useState("");
+  const [gender, setGender] = useState("male");
+
   const [status, setStatus] = useState("normal");
   const [statusIn, setStatusIn] = useState("normal");
 
   // --------------- Error Handler for Sign Up and Sign In ----------------
-  const ErrorHandler = (
-    Err: RefObject<HTMLDivElement | HTMLInputElement>,
-    st: string
-  ) => {
-    if (Err.current?.tagName.toLowerCase() === "input") {
-      const intValue: string = (Err.current as HTMLInputElement).value;
-      (Err.current as HTMLInputElement).value = st;
-      setTimeout(() => {
-        (Err.current as HTMLInputElement).value = intValue;
-      }, 1000);
-    }
-    if (Err.current?.tagName.toLowerCase() === "div") {
-      const input = Err.current?.querySelector("input");
-      if (input) {
-        const intValue: string = input.value;
-        input.value = st;
-        setTimeout(() => {
-          input.value = intValue;
-        }, 1000);
-      }
-    }
-    Err.current?.classList.add("active");
-    setTimeout(() => {
-      Err.current?.classList.remove("active");
-    }, 1000);
-  };
 
   const SignUp = async (e: Event) => {
     e.preventDefault();
-    setStatus("cheking");
-    // const ti = await setTimeout(() => {}, 200);
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (passwordUp !== conPassword || passwordUp.length < 6) {
-      if (passwordUp.length < 6) {
-        ErrorHandler(passwordUpRef, "Password must be at least 6 characters");
-      } else {
-        ErrorHandler(passwordUpRef, "Password does not match");
-        ErrorHandler(conPasswordRef, "Password does not match");
-      }
+    if (firstName.length < 3) {
+      ErrorHandler(firstNameRef, "User Name must be at least 3 characters");
+      return;
+    }
+    if (lastName.length < 3) {
+      ErrorHandler(lastNameRef, "User Name must be at least 3 characters");
+      return;
     }
     if (!emailRegex.test(emailUp)) {
       ErrorHandler(emailUpRef, "Email is not a valid");
+      return;
     }
-    if (userName.length < 3) {
-      ErrorHandler(userNameRef, "User Name must be at least 3 characters");
+    if (passwordUp.length < 6) {
+      ErrorHandler(passwordUpRef, "Password must be at least 6 characters");
+      return;
     }
-  };
-
-  const SignIn = (e: Event) => {
-    e.preventDefault();
-    setStatusIn("checking");
-    setTimeout(() => {
-      const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (passwordIn.length < 6) {
-        ErrorHandler(passwordInRef, "Password must be at least 6 characters");
+    setStatus("checking");
+    const { data } = await axios.post("http://localhost:8000/signup", {
+      firstName,
+      lastName,
+      password: passwordUp,
+      email: emailUp,
+      gender,
+    });
+    if (!data.success) {
+      setStatus("error");
+      if (data.message.includes("email")) {
+        ErrorHandler(emailUpRef, data.message);
       }
-      if (!emailRegex.test(emailIn)) {
-        ErrorHandler(emailInRef, "Email is not a valid");
-      }
-      setStatusIn("checked");
-
+      setTimeout(() => setStatus("normal"), 400);
+    }
+    if (data.success) {
+      localStorage.setItem("user", JSON.stringify(data.user));
       setTimeout(() => {
-        Success("signin");
-      }, 1000);
-    }, 1000);
+        setStatus("checked");
+        setTimeout(() => {
+          Success("signup");
+        }, 400);
+      }, 400);
+    }
   };
 
-  //Success Sign up  or Sign in
+  const SignIn = async (e: Event) => {
+    e.preventDefault();
+    const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailIn)) {
+      ErrorHandler(emailInRef, "Email is not a valid");
+      return;
+    }
+    if (passwordIn.length < 6) {
+      ErrorHandler(passwordInRef, "Password must be at least 6 characters");
+      return;
+    }
+    setStatusIn("checking");
+    const password = passwordIn;
+    const email = emailIn;
+    const { data } = await axios.post("http://localhost:8000/login", {
+      password,
+      email,
+    });
+    if (!data.success) {
+      setStatus("error");
+      if (data.message.includes("client not found")) {
+        ErrorHandler(emailInRef, "Email does not exists");
+      }
+      if (data.message.includes("password is wrong")) {
+        ErrorHandler(passwordInRef, "Password is wrong");
+      }
+      setTimeout(() => setStatusIn("normal"), 400);
+    }
+    if (data.success) {
+      localStorage.setItem("user", JSON.stringify(data.user));
+      cookies.set("token", data.tkn);
+      setTimeout(() => {
+        setStatusIn("checked");
+        setTimeout(() => {
+          Success("login");
+        }, 400);
+      }, 400);
+    }
+  };
+
   const Success = (st: string) => {
     box1.current?.classList.add("translate-x-[100%]");
     box3.current?.classList.add("translate-x-[-100%]");
@@ -135,11 +188,12 @@ const page = () => {
           }
           SuccessImg.current?.classList.remove("translate-y-[-300%]");
           SuccessImg.current?.classList.add("translate-y-[-200%]");
+          setTimeout(() => (window.location.href = "/"), 200);
         }, 100);
       }, 200);
     }, 300);
   };
-  // Switch between Sign Up and Sign Up
+
   const ClickHandler = (st: String) => {
     if (st === "up") {
       signin.current?.classList.replace(
@@ -162,7 +216,8 @@ const page = () => {
       setEmailUp("");
       setPasswordUp("");
       setConPassword("");
-      setUserName("");
+      setFirstName("");
+      setLastName("");
     }
     if (st === "down") {
       signin.current?.classList.replace(
@@ -190,10 +245,7 @@ const page = () => {
     setTimeout(() => log.current?.classList.remove("translate-y-[6px]"), 200);
   };
   return (
-    <div
-      onClick={() => console.log(user)}
-      className="min-w-[100%] min-h-[100vh] flex justify-center items-center"
-    >
+    <div className="min-w-[100%] min-h-[100vh] flex justify-center items-center">
       <div
         ref={log}
         className="log duration-300 w-[90%] relative flex  items-center  h-[500px] mx-[auto] bg-transparent "
@@ -372,12 +424,20 @@ const page = () => {
                 className="w-[70%] mx-auto flex flex-col items-center gap-5 md:w-[90%]"
               >
                 <input
-                  ref={userNameRef}
+                  ref={firstNameRef}
                   type="text"
-                  placeholder="User Name"
+                  placeholder="First Name"
                   className=" w-full py-2 px-3 rounded-[8px] bg-white max-w-[250px] outline-none border-[0.5px] border-solid border-black"
-                  onChange={(e: any) => setUserName(e.target.value)}
-                  value={userName}
+                  onChange={(e: any) => setFirstName(e.target.value)}
+                  value={firstName}
+                />
+                <input
+                  ref={lastNameRef}
+                  type="text"
+                  placeholder="Last Name"
+                  className=" w-full py-2 px-3 rounded-[8px] bg-white max-w-[250px] outline-none border-[0.5px] border-solid border-black"
+                  onChange={(e: any) => setLastName(e.target.value)}
+                  value={lastName}
                 />
                 <input
                   ref={emailUpRef}
@@ -410,28 +470,40 @@ const page = () => {
                     />
                   )}
                 </div>
-                <div
-                  className="w-full py-2 px-3 rounded-[8px] bg-white max-w-[250px] flex items-center justify-between border-[0.5px] border-solid border-black"
-                  ref={conPasswordRef}
-                >
-                  <input
-                    type={see ? "text" : "password"}
-                    placeholder="confirme Password"
-                    className="outline-none bg-transparent"
-                    onChange={(e: any) => setConPassword(e.target.value)}
-                    value={conPassword}
-                  />
-                  {!see ? (
-                    <FaEye
-                      className=" cursor-pointer "
-                      onClick={() => setSee(true)}
-                    />
-                  ) : (
-                    <FaEyeSlash
-                      className=" cursor-pointer "
-                      onClick={() => setSee(false)}
-                    />
-                  )}
+                <div className="flex gap-5 items-center">
+                  <div>
+                    <label
+                      htmlFor="male"
+                      className={` py-2 w-20 text-center block rounded-md cursor-pointer border border-black border-solid text-[1.1rem] ${
+                        gender === "male"
+                          ? "bg-primary text-white border-none"
+                          : "bg-white"
+                      }`}
+                      onClick={() => {
+                        setGender("male");
+                      }}
+                    >
+                      {" "}
+                      Male{" "}
+                    </label>
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="female"
+                      className={` py-2 w-20 text-center block rounded-md cursor-pointer border border-black border-solid text-[1.1rem] ${
+                        gender === "female"
+                          ? "bg-primary text-white border-none"
+                          : "bg-white"
+                      }`}
+                      onClick={() => {
+                        setGender("female");
+                        console.log(gender);
+                      }}
+                    >
+                      {" "}
+                      Female{" "}
+                    </label>
+                  </div>
                 </div>
                 <div
                   className="w-full max-w-[250px]"

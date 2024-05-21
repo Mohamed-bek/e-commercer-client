@@ -1,16 +1,35 @@
+import axios from "axios";
 import React, { useEffect } from "react";
 import { FaStar, FaHeart, FaBookmark } from "react-icons/fa";
+import Cookie from "cookie-universal";
+import Link from "next/link";
+import { cartStore } from "@/app/UserContext";
+
 export interface IProduct {
   _id: string;
-  avatar: {
+  images: {
     public_id: string;
     url: string;
-  };
+  }[];
   name: string;
   sellerName: string;
-  price: number;
+  creatorId: string;
   rating: number;
   liked: boolean;
+  category: string;
+  price: number;
+  colors: string[];
+  brand: string;
+  reviews: {
+    name: string;
+    _id: string;
+    image: string;
+    review: string;
+    rating: number;
+  }[];
+  description: string;
+  sizes: string[];
+  quantity: number;
 }
 
 type Props = {
@@ -19,6 +38,9 @@ type Props = {
 };
 
 const SmallCard = ({ product, buttonText = "Buy" }: Props) => {
+  const addToCart = cartStore((state) => state.addToCart);
+  const cart = cartStore((state) => state.cart);
+  const cookies = Cookie();
   function likeProduct(e: React.MouseEvent<SVGElement, MouseEvent>) {
     const element = e.target as HTMLElement;
     if (element.tagName === "svg") {
@@ -45,10 +67,31 @@ const SmallCard = ({ product, buttonText = "Buy" }: Props) => {
     audio.play();
   }
 
+  function PlaySoundCart() {
+    const audio = new Audio("/cart.wav");
+    audio.play();
+  }
+  const LikeProduct = async (product: IProduct) => {
+    const { data } = await axios.put(
+      `http://localhost:8000/likeProduct/:${product._id}`,
+      {
+        token: cookies.get("token"),
+      }
+    );
+  };
+
   return (
     <div className="h-fit bg-white rounded-lg p-2 text-black" key={product._id}>
       <div className="w-full h-[180px] flex items-center justify-center mb-1 rounded-lg bg-[#EEE] relative">
-        <img className="h-[100%]" src={product.avatar.url} alt="product img" />{" "}
+        <img
+          className="h-[100%]"
+          src={
+            product.images && product.images.length > 0
+              ? product.images[0].url
+              : ""
+          }
+          alt="product img"
+        />{" "}
         <FaHeart
           className="text-[1.3rem] text-[#bfbfbf] absolute right-2 top-2 z-50 w-7 h-7 cursor-pointer [transition:0.3s]"
           onClick={(e) => {
@@ -70,7 +113,6 @@ const SmallCard = ({ product, buttonText = "Buy" }: Props) => {
           {" "}
           {product.name}{" "}
         </p>
-
         <p className="flex gap-1 items-center my-1">
           {" "}
           {[...Array(5)].map((_, index) => (
@@ -82,11 +124,23 @@ const SmallCard = ({ product, buttonText = "Buy" }: Props) => {
           ))}{" "}
         </p>
         <p className="text-[1.1rem] text-[#dd2020] mb-1 flex justify-between items-center">
-          {" "}
-          {product.price}DA{" "}
-          <button className="bg-primary text-white py-1 text-[1.1rem] font-semibold rounded-3xl  px-5 cursor-pointer">
+          {product.price !== undefined ? product.price.toString() + "DA" : ""}
+        </p>
+        <p className="text-[1.1rem] text-[#dd2020] mb-1 flex justify-between items-center">
+          <Link href={`/products/${product._id}`}>
+            <button className="bg-white text-black w-24 border border-solid border-black py-1 text-[1.1rem] font-semibold rounded-3xl  px-5 cursor-pointer">
+              Details
+            </button>
+          </Link>
+          <button
+            onClick={() => {
+              addToCart({ product, quantity: 1 }), console.log(cart);
+              PlaySoundCart();
+            }}
+            className="bg-primary text-white py-1 text-[1.1rem] font-semibold rounded-3xl  w-24  px-5 cursor-pointer"
+          >
             {buttonText}
-          </button>{" "}
+          </button>
         </p>
       </div>
     </div>

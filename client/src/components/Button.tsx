@@ -1,5 +1,6 @@
 import { RefObject } from "react";
 import { FaCheck } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
 
 interface Props {
   data: string;
@@ -28,6 +29,13 @@ export default function Button({ data, status }: Props) {
         }`}
       >
         <FaCheck className="text-white text-[20px]" />
+      </div>
+      <div
+        className={`w-full h-full absolute top-0 left-0  flex items-center justify-center duration-300 ${
+          status === "error" ? "translate-y-[0%]" : "translate-y-[-100%]"
+        }`}
+      >
+        <IoCloseSharp className="text-white text-[24px]" />
       </div>
     </button>
   );

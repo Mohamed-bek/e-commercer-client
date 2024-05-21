@@ -1,6 +1,7 @@
 "use client";
 import SmallCard, { IProduct } from "@/components/SmallCard";
-import React, { useRef, useState } from "react";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaAngleLeft, FaAngleRight, FaStar } from "react-icons/fa6";
 import { RiMenu3Line } from "react-icons/ri";
@@ -9,344 +10,9 @@ type Props = {};
 
 const Products = (props: Props) => {
   const headerRef = useRef<HTMLElement>(null);
-  const [products, setProducts] = useState<IProduct[]>([
-    {
-      _id: "123",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1230",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "13",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1235",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1232",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "12",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1234",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "123",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1230",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "13",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1235",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1232",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "12",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1234",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "123",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1230",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "13",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1235",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1232",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "12",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1234",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "123",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1230",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "13",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1235",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "1232",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: false,
-    },
-    {
-      _id: "12",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-    {
-      _id: "1234",
-      name: "Tshirt Nike",
-      price: 20,
-      avatar: {
-        public_id: "urlll",
-        url: "/images/product-5.png",
-      },
-      sellerName: "Jeff",
-      rating: 4,
-      liked: true,
-    },
-  ]);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [page, setPage] = useState<number>(1);
+
   const [brands, setBrands] = useState([
     "Chanel",
     "Gucci",
@@ -357,6 +23,31 @@ const Products = (props: Props) => {
     "Burberry",
     "Balenciaga",
   ]);
+
+  const getProducts = async (page: number) => {
+    const { data } = await axios.get(
+      `http://localhost:8000/product/get/all/${page}`
+    );
+    if (data.success === true) {
+      setProducts(data.products);
+    }
+  };
+
+  const getNumberOfPages = async () => {
+    const { data } = await axios.get(
+      `http://localhost:8000/product/get/productsPagesNumber`
+    );
+    if (data.success === true) {
+      setnumberPages(data.numberOfPages);
+    }
+  };
+  useEffect(() => {
+    getProducts(page);
+  }, [page]);
+
+  useEffect(() => {
+    getNumberOfPages();
+  }, []);
 
   const handleScroll = () => {
     const currentScrollY = window.scrollY;
@@ -376,7 +67,6 @@ const Products = (props: Props) => {
   window.addEventListener("scroll", handleScroll);
 
   const [numberPages, setnumberPages] = useState<number>(10);
-  const [page, setPage] = useState(1);
   const filter = useRef<HTMLElement>(null);
   return (
     <div className="w-full min-h-[100vh] bg-white py-3 relative">
@@ -602,11 +292,12 @@ const Products = (props: Props) => {
         </header>
         <div className="w-full rounded-lg h-fit bg-primary p-5">
           <div className="grid h-[fit-content] grid-cols-[repeat(auto-fit,_minmax(200px,_1fr))] gap-[20px] ">
-            {products.map((product) => (
-              <div key={product._id}>
-                <SmallCard product={product} />
-              </div>
-            ))}
+            {products.length > 0 &&
+              products.map((product) => (
+                <div key={product._id}>
+                  <SmallCard product={product} />
+                </div>
+              ))}
           </div>
           <div className="pages flex items-center justify-between px-5 py-2 border rounded-lg border-solid border-white mt-5">
             <FaAngleLeft

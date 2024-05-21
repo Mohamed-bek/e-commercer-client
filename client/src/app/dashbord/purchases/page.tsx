@@ -1,72 +1,47 @@
 "use client";
-import Refund from "@/components/Refund";
+import Refund, { IRefund } from "@/components/Refund";
 import React, { useState } from "react";
 import { HiOutlineReceiptRefund } from "react-icons/hi2";
 import { IoMdClose } from "react-icons/io";
 export interface IPurchase {
   _id: string;
-  img: string;
-  name: string;
-  sellerName: string;
-  price: number;
-  piece: number;
-  date: Date;
+  client: {
+    firstName: string;
+    lastName: string;
+    image: {
+      url: string;
+      public_id: string;
+    };
+  };
+  order: {
+    store: {
+      firstName: string;
+      lastName: string;
+      image: {
+        url: string;
+        public_id: string;
+      };
+    };
+    product: {
+      name: string;
+      _id: string;
+      images: {
+        url: string;
+        public_id: string;
+      }[];
+      price: number;
+      quantity: Number;
+    };
+  }[];
+  paymentMode: String;
+  price: Number;
+  createdAt: Date;
 }
-type Props = {
-  setRefund: React.Dispatch<React.SetStateAction<IPurchase | undefined>>;
-  setDisplayRefund: React.Dispatch<React.SetStateAction<boolean>>;
-  refund: any;
-};
+type Props = {};
 export default function Purchases({}: Props) {
   const [displayRefund, setDisplayRefund] = useState<boolean>(false);
-  const [refund, setRefund] = useState<IPurchase | null>(null);
-  const [purchases, setPurchases] = useState<IPurchase[]>([
-    {
-      _id: "purchases1",
-      img: "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 122737832",
-      sellerName: "MohamedDGZGDZADS",
-      price: 300,
-      piece: 5,
-      date: new Date(Date.now()),
-    },
-    {
-      _id: "purchase1",
-      img: "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "pro",
-      sellerName: "Mo",
-      price: 300,
-      piece: 5,
-      date: new Date(Date.now()),
-    },
-    {
-      _id: "purchase3",
-      img: "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 1",
-      sellerName: "Mohamed",
-      price: 300,
-      piece: 5,
-      date: new Date(Date.now()),
-    },
-    {
-      _id: "purchase4",
-      img: "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 1",
-      sellerName: "Mohamed",
-      price: 300,
-      piece: 5,
-      date: new Date(Date.now()),
-    },
-    {
-      _id: "purchase5",
-      img: "http://res.cloudinary.com/dt8qbasyh/image/upload/v1710094290/avatars/nwahkveg4w53s6212jm4.jpg",
-      name: "product 1",
-      sellerName: "Mohamed",
-      price: 300,
-      piece: 5,
-      date: new Date(Date.now()),
-    },
-  ]);
+  const [refund, setRefund] = useState<IRefund | null>(null);
+  const [purchases, setPurchases] = useState<IPurchase[]>([]);
   return (
     <div className="w-full border border-solid border-[black] rounded-md">
       <div
@@ -90,45 +65,57 @@ export default function Purchases({}: Props) {
         <div className="w-[15%]"> date </div>
         <div className="w-[10%]"> refund </div>
       </div>
-      {purchases.map((purchase, i) => (
-        <div
-          key={purchase._id}
-          className={`flex text-black justify-between items-center px-3 py-2 border-b border-black border-solid ${
-            i % 2 !== 1 ? "bg-primary text-white" : "bg-white text-black"
-          } ${i === 0 ? "border-t" : ""}`}
-        >
-          <div className="flex gap-2 items-center w-[28%]">
-            <img
-              className="w-14 rounded-md"
-              src={purchase.img}
-              alt="product img"
-            />
-            <p> {purchase.name && purchase.name} </p>
+      {purchases.map((purchase) =>
+        purchase.order.map((order, i) => (
+          <div
+            key={purchase._id + i}
+            className={`flex text-black justify-between items-center px-3 py-2 border-b border-black border-solid ${
+              i % 2 !== 1 ? "bg-primary text-white" : "bg-white text-black"
+            } ${i === 0 ? "border-t" : ""}`}
+          >
+            <div className="flex gap-2 items-center w-[28%]">
+              <img
+                className="w-14 rounded-md"
+                src={order.product.images[0]?.url}
+                alt="product img"
+              />
+              <p> {order.product.name} </p>
+            </div>
+            <div className="w-[22%] font-[200]">
+              {" "}
+              {order.store.firstName + " " + order.store.lastName}{" "}
+            </div>
+            <div className="w-[10%] font-[600]"> {order.product.price}DA </div>
+            <div className="w-[10%] font-[600]">
+              {" "}
+              {order.product.quantity.toString()}{" "}
+            </div>
+            <div className="w-[15%] font-[200]">
+              {" "}
+              {purchase.createdAt.toLocaleDateString("en-US", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })}{" "}
+            </div>
+            <div className="w-[10%] pl-3">
+              {" "}
+              <HiOutlineReceiptRefund
+                onClick={() => {
+                  console.log(refund);
+                  setRefund({
+                    store: order.store,
+                    product: order.product,
+                    createdAt: purchase.createdAt,
+                  });
+                  setDisplayRefund(true);
+                }}
+                className="text-[1.5rem] cursor-pointer"
+              />{" "}
+            </div>
           </div>
-          <div className="w-[22%] font-[200]"> {purchase.sellerName} </div>
-          <div className="w-[10%] font-[600]"> {purchase.price}$ </div>
-          <div className="w-[10%] font-[600]"> {purchase.piece} </div>
-          <div className="w-[15%] font-[200]">
-            {" "}
-            {purchase.date.toLocaleDateString("en-US", {
-              month: "short",
-              day: "2-digit",
-              year: "numeric",
-            })}{" "}
-          </div>
-          <div className="w-[10%] pl-3">
-            {" "}
-            <HiOutlineReceiptRefund
-              onClick={() => {
-                console.log(refund);
-                setRefund(purchase);
-                setDisplayRefund(true);
-              }}
-              className="text-[1.5rem] cursor-pointer"
-            />{" "}
-          </div>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 }

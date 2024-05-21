@@ -33,6 +33,7 @@
 
 * {
   font-family: "Cairo", sans-serif;
+  box-sizing: border-box;
 }
 
 .links.active {
@@ -216,21 +217,26 @@ input[type="color"]::-webkit-color-swatch {
   cursor: no-drop;
 }
 
+.error {
+  border-color: red;
+  animation: bounce 0.5s ease-out backwards;
+}
+
 @keyframes bounce {
   0% {
     transform: translateX(0);
   }
   0% {
-    transform: translateX(10px);
+    transform: translateX(12px);
   }
   20% {
-    transform: translateX(-10px);
+    transform: translateX(-12px);
   }
   40% {
-    transform: translateX(6px);
+    transform: translateX(8px);
   }
   60% {
-    transform: translateX(-6px);
+    transform: translateX(-8px);
   }
   80% {
     transform: translateX(4px);
